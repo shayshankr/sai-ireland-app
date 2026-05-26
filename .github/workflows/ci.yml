@@ -59,10 +59,9 @@ jobs:
           retention-days: 7
 
   release:
-    name: Build release AAB
+    name: Build & deploy to Play Store internal testing
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    # Only runs on pushes to master (not PRs) and only when keystore secrets are present
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: build
 
@@ -100,9 +99,19 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew bundleRelease --stacktrace
 
-      - name: Upload release AAB
+      - name: Upload release AAB (artifact backup)
         uses: actions/upload-artifact@v4
         with:
           name: app-release-${{ github.sha }}
           path: app/build/outputs/bundle/release/app-release.aab
           retention-days: 30
+
+      - name: Deploy to Play Store — internal testing
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: org.sathyasaieire.app
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          track: internal
+          status: completed
+          changesNotSentForReview: true
