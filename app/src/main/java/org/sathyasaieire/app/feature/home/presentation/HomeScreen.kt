@@ -3,6 +3,7 @@ package org.sathyasaieire.app.feature.home.presentation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -27,6 +28,7 @@ import org.sathyasaieire.app.R
 fun HomeScreen(
     onNavigate: (String) -> Unit,
     onSignOut: () -> Unit,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     Scaffold(
         topBar = {
@@ -39,10 +41,7 @@ fun HomeScreen(
                 },
                 actions = {
                     IconButton(onClick = onSignOut) {
-                        Icon(
-                            imageVector = Icons.Outlined.Logout,
-                            contentDescription = "Sign out",
-                        )
+                        Icon(Icons.Outlined.Logout, contentDescription = "Sign out")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -50,11 +49,12 @@ fun HomeScreen(
                 ),
             )
         },
-    ) { padding ->
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(innerPadding)
+                .padding(contentPadding),
             contentAlignment = Alignment.Center,
         ) {
             Column(
@@ -69,7 +69,7 @@ fun HomeScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = "Feature 2 (Events) coming next",
+                    text = "Full home screen coming in the polish phase",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
