@@ -23,6 +23,7 @@ import org.sathyasaieire.app.feature.events.presentation.AdminEventScreen
 import org.sathyasaieire.app.feature.events.presentation.EventDetailScreen
 import org.sathyasaieire.app.feature.events.presentation.EventListScreen
 import org.sathyasaieire.app.feature.home.presentation.HomeScreen
+import org.sathyasaieire.app.feature.contact.presentation.ContactScreen
 import org.sathyasaieire.app.feature.more.presentation.MoreScreen
 import org.sathyasaieire.app.feature.whatsapp.presentation.WhatsAppJoinScreen
 import org.sathyasaieire.app.ui.components.SaiBottomBar
@@ -150,7 +151,7 @@ fun AppNavGraph(
 
             // ── Stub screens (no bottom bar) ─────────────────────────────────
             composable(Route.Contact.path) {
-                StubScreen(label = "Contact Admin", emoji = "✉️")
+                ContactScreen(onBack = { navController.popBackStack() })
             }
             composable(Route.Gallery.path) {
                 StubScreen(label = "Gallery", emoji = "🖼")
