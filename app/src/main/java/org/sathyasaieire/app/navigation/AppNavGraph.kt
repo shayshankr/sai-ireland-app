@@ -25,6 +25,9 @@ import org.sathyasaieire.app.feature.events.presentation.EventListScreen
 import org.sathyasaieire.app.feature.home.presentation.HomeScreen
 import org.sathyasaieire.app.feature.contact.presentation.ContactScreen
 import org.sathyasaieire.app.feature.more.presentation.MoreScreen
+import org.sathyasaieire.app.feature.polls.presentation.AdminPollScreen
+import org.sathyasaieire.app.feature.polls.presentation.PollDetailScreen
+import org.sathyasaieire.app.feature.polls.presentation.PollsListScreen
 import org.sathyasaieire.app.feature.whatsapp.presentation.WhatsAppJoinScreen
 import org.sathyasaieire.app.ui.components.SaiBottomBar
 import org.sathyasaieire.app.ui.components.StubScreen
@@ -119,7 +122,12 @@ fun AppNavGraph(
                 )
             }
             composable(Route.Polls.path) {
-                StubScreen(label = "Polls", emoji = "🗳️", contentPadding = padding)
+                PollsListScreen(
+                    onPollClick = { id -> navController.navigate(Route.PollDetail.createRoute(id)) },
+                    onCreatePoll = { navController.navigate(Route.AdminPollCreate.path) },
+                    isAdmin = isAdmin,
+                    contentPadding = padding,
+                )
             }
             composable(Route.News.path) {
                 StubScreen(label = "News", emoji = "📰", contentPadding = padding)
@@ -141,6 +149,17 @@ fun AppNavGraph(
                     onEditEvent = if (isAdmin) {
                         { navController.navigate(Route.AdminEventEdit.createRoute(it)) }
                     } else null,
+                )
+            }
+
+            // ── Poll detail (no bottom bar) ──────────────────────────────────
+            composable(
+                route = Route.PollDetail.path,
+                arguments = listOf(navArgument("pollId") { type = NavType.StringType }),
+            ) {
+                PollDetailScreen(
+                    onBack = { navController.popBackStack() },
+                    isAdmin = isAdmin,
                 )
             }
 
@@ -173,6 +192,9 @@ fun AppNavGraph(
             }
 
             // ── Admin screens (no bottom bar) ────────────────────────────────
+            composable(Route.AdminPollCreate.path) {
+                AdminPollScreen(onBack = { navController.popBackStack() })
+            }
             composable(Route.AdminEventCreate.path) {
                 AdminEventScreen(onBack = { navController.popBackStack() })
             }
