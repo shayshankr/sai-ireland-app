@@ -22,9 +22,12 @@ import org.sathyasaieire.app.feature.auth.presentation.SignInScreen
 import org.sathyasaieire.app.feature.events.presentation.AdminEventScreen
 import org.sathyasaieire.app.feature.events.presentation.EventDetailScreen
 import org.sathyasaieire.app.feature.events.presentation.EventListScreen
-import org.sathyasaieire.app.feature.home.presentation.HomeScreen
+import org.sathyasaieire.app.feature.bhajans.presentation.BhajanDetailScreen
+import org.sathyasaieire.app.feature.bhajans.presentation.BhajanListScreen
 import org.sathyasaieire.app.feature.contact.presentation.ContactScreen
+import org.sathyasaieire.app.feature.home.presentation.HomeScreen
 import org.sathyasaieire.app.feature.more.presentation.MoreScreen
+import org.sathyasaieire.app.feature.profile.presentation.ProfileScreen
 import org.sathyasaieire.app.feature.polls.presentation.AdminPollScreen
 import org.sathyasaieire.app.feature.settings.presentation.SettingsScreen
 import org.sathyasaieire.app.feature.polls.presentation.PollDetailScreen
@@ -112,6 +115,7 @@ fun AppNavGraph(
                 HomeScreen(
                     onNavigate = { navController.navigate(it) },
                     onSignOut = onSignOut,
+                    user = (authState as? AuthState.SignedIn)?.user,
                     contentPadding = padding,
                 )
             }
@@ -178,7 +182,16 @@ fun AppNavGraph(
                 StubScreen(label = "Gallery", emoji = "🖼")
             }
             composable(Route.Bhajans.path) {
-                StubScreen(label = "Bhajan Library", emoji = "🎵")
+                BhajanListScreen(
+                    onBack = { navController.popBackStack() },
+                    onBhajanClick = { id -> navController.navigate(Route.BhajanDetail.createRoute(id)) },
+                )
+            }
+            composable(
+                route = Route.BhajanDetail.path,
+                arguments = listOf(navArgument("bhajanId") { type = NavType.StringType }),
+            ) {
+                BhajanDetailScreen(onBack = { navController.popBackStack() })
             }
             composable(Route.Timer.path) {
                 StubScreen(label = "Meditation Timer", emoji = "🧘")
@@ -187,7 +200,11 @@ fun AppNavGraph(
                 StubScreen(label = "Seva Sign-up", emoji = "💚")
             }
             composable(Route.Profile.path) {
-                StubScreen(label = "Profile", emoji = "👤")
+                ProfileScreen(
+                    user = (authState as? AuthState.SignedIn)?.user,
+                    onBack = { navController.popBackStack() },
+                    onNavigateToSettings = { navController.navigate(Route.Settings.path) },
+                )
             }
             composable(Route.Settings.path) {
                 SettingsScreen(
