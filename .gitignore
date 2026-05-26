@@ -1,0 +1,24 @@
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+app/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+*.so
+
+# Firebase — NEVER commit these
+google-services.json
+app/google-services.json
+
+# Signing — NEVER commit these
+*.jks
+*.keystore
+keystore.properties
+
+# Environment
+.env
+*.env

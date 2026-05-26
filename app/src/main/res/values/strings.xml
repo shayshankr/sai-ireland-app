@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Sathya Sai Organisation Ireland</string>
+    <string name="admin_email">shayshankrathore05@gmail.com</string>
+    <string name="privacy_policy_url">https://shayshankr.github.io/sai-ireland-app/privacy</string>
+    <string name="donation_url">https://sathyasaieire.org</string>
+    <string name="whatsapp_placeholder">Link available after join request is approved.</string>
+    <string name="sign_in_tagline">Love All, Serve All</string>
+    <string name="sign_in_body">Sign in to access events, polls, and community updates for the Sathya Sai Organisation Ireland.</string>
+    <string name="sign_in_button">Continue with Google</string>
+    <string name="sign_in_privacy">By signing in you agree to our Privacy Policy.</string>
+    <string name="gdpr_title">Your Data &amp; Privacy</string>
+    <string name="gdpr_body">This app is operated from Ireland and complies with GDPR.\n\nWe collect your name, email, and profile photo from Google Sign-In to personalise your experience.\n\nWith your optional consent we also enable:\n• Crash reporting (Firebase Crashlytics)\n• Analytics (Firebase Analytics)\n\nYou can change these choices at any time in Settings.</string>
+    <string name="gdpr_accept_required">I understand and agree to the Privacy Policy</string>
+    <string name="gdpr_accept_analytics">Enable crash reporting &amp; analytics (optional)</string>
+    <string name="gdpr_continue">Continue</string>
+</resources>
