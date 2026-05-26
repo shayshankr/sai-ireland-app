@@ -17,7 +17,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "org.sathyasaieire.app"
+        applicationId = "com.shayshank.saiireland"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

@@ -110,7 +110,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-          packageName: org.sathyasaieire.app
+          packageName: com.shayshank.saiireland
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
           track: internal
           status: completed
