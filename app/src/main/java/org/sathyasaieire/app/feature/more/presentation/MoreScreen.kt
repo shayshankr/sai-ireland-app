@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Announcement
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.ContactMail
 import androidx.compose.material.icons.outlined.LibraryMusic
@@ -46,18 +47,22 @@ private data class MoreItem(
 @Composable
 fun MoreScreen(
     onNavigate: (String) -> Unit,
+    isAdmin: Boolean = false,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
-    val items = listOf(
-        MoreItem(Icons.Outlined.VolunteerActivism, "💬", "WhatsApp Group", "Request to join our community group", "whatsapp_join"),
-        MoreItem(Icons.Outlined.LibraryMusic, "🎵", "Bhajan Library", "Browse and play bhajans", "bhajans"),
-        MoreItem(Icons.Outlined.Timer, "🧘", "Meditation Timer", "Guided meditation timer", "timer"),
-        MoreItem(Icons.Outlined.Photo, "🖼", "Gallery", "Photos from our events and satsangs", "gallery"),
-        MoreItem(Icons.Outlined.VolunteerActivism, "💚", "Seva Sign-up", "Register for seva opportunities", "seva"),
-        MoreItem(Icons.Outlined.ContactMail, "✉️", "Contact Admin", "Send a message to the admin", "contact"),
-        MoreItem(Icons.Outlined.Person, "👤", "Profile", "Manage your account", "profile"),
-        MoreItem(Icons.Outlined.Settings, "⚙️", "Settings", "App preferences and notifications", "settings"),
-    )
+    val items = buildList {
+        add(MoreItem(Icons.Outlined.VolunteerActivism, "💬", "WhatsApp Group", "Request to join our community group", "whatsapp_join"))
+        add(MoreItem(Icons.Outlined.LibraryMusic, "🎵", "Bhajan Library", "Browse and play bhajans", "bhajans"))
+        add(MoreItem(Icons.Outlined.Timer, "🧘", "Meditation Timer", "Guided meditation timer", "timer"))
+        add(MoreItem(Icons.Outlined.Photo, "🖼", "Gallery", "Photos from our events and satsangs", "gallery"))
+        add(MoreItem(Icons.Outlined.VolunteerActivism, "💚", "Seva Sign-up", "Register for seva opportunities", "seva"))
+        add(MoreItem(Icons.Outlined.ContactMail, "✉️", "Contact Admin", "Send a message to the admin", "contact"))
+        add(MoreItem(Icons.Outlined.Person, "👤", "Profile", "Manage your account", "profile"))
+        add(MoreItem(Icons.Outlined.Settings, "⚙️", "Settings", "App preferences and notifications", "settings"))
+        if (isAdmin) {
+            add(MoreItem(Icons.Outlined.Announcement, "📢", "Manage Announcements", "Create, edit, or hide announcements", "admin_announcements"))
+        }
+    }
 
     Scaffold(
         topBar = {

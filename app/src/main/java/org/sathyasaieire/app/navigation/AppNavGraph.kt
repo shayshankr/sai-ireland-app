@@ -22,6 +22,8 @@ import org.sathyasaieire.app.feature.auth.presentation.SignInScreen
 import org.sathyasaieire.app.feature.events.presentation.AdminEventScreen
 import org.sathyasaieire.app.feature.events.presentation.EventDetailScreen
 import org.sathyasaieire.app.feature.events.presentation.EventListScreen
+import org.sathyasaieire.app.feature.announcements.presentation.AdminAnnouncementFormScreen
+import org.sathyasaieire.app.feature.announcements.presentation.AdminAnnouncementsScreen
 import org.sathyasaieire.app.feature.bhajans.presentation.BhajanDetailScreen
 import org.sathyasaieire.app.feature.bhajans.presentation.BhajanListScreen
 import org.sathyasaieire.app.feature.contact.presentation.ContactScreen
@@ -141,6 +143,7 @@ fun AppNavGraph(
             composable(Route.More.path) {
                 MoreScreen(
                     onNavigate = { route -> navController.navigate(route) },
+                    isAdmin = isAdmin,
                     contentPadding = padding,
                 )
             }
@@ -212,6 +215,24 @@ fun AppNavGraph(
                     onSignOut = onSignOut,
                     onDeleteAccount = onDeleteAccount,
                 )
+            }
+
+            // ── Announcements admin (no bottom bar) ──────────────────────────
+            composable(Route.AdminAnnouncements.path) {
+                AdminAnnouncementsScreen(
+                    onBack = { navController.popBackStack() },
+                    onCreateAnnouncement = { navController.navigate(Route.AdminAnnouncementCreate.path) },
+                    onEditAnnouncement = { id -> navController.navigate(Route.AdminAnnouncementEdit.createRoute(id)) },
+                )
+            }
+            composable(Route.AdminAnnouncementCreate.path) {
+                AdminAnnouncementFormScreen(onBack = { navController.popBackStack() })
+            }
+            composable(
+                route = Route.AdminAnnouncementEdit.path,
+                arguments = listOf(navArgument("announcementId") { type = NavType.StringType }),
+            ) {
+                AdminAnnouncementFormScreen(onBack = { navController.popBackStack() })
             }
 
             // ── Admin screens (no bottom bar) ────────────────────────────────
