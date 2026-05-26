@@ -33,7 +33,13 @@
             </intent-filter>
         </activity>
 
-        <!-- FCM service — added in Feature 7 -->
+        <service
+            android:name=".feature.notifications.FcmService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <receiver
             android:name=".feature.alarm.EventAlarmReceiver"

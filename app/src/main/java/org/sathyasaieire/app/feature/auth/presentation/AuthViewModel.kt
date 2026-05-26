@@ -82,6 +82,16 @@ class AuthViewModel @Inject constructor(
             _state.value = AuthState.SignedOut
         }
     }
+
+    fun deleteAccount() {
+        viewModelScope.launch {
+            _state.value = AuthState.Loading
+            authRepository.deleteAccount().fold(
+                onSuccess = { _state.value = AuthState.SignedOut },
+                onFailure = { e -> _state.value = AuthState.Error(e.message ?: "Delete failed") },
+            )
+        }
+    }
 }
 
 sealed interface AuthState {

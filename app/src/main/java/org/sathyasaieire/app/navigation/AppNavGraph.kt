@@ -26,6 +26,7 @@ import org.sathyasaieire.app.feature.home.presentation.HomeScreen
 import org.sathyasaieire.app.feature.contact.presentation.ContactScreen
 import org.sathyasaieire.app.feature.more.presentation.MoreScreen
 import org.sathyasaieire.app.feature.polls.presentation.AdminPollScreen
+import org.sathyasaieire.app.feature.settings.presentation.SettingsScreen
 import org.sathyasaieire.app.feature.polls.presentation.PollDetailScreen
 import org.sathyasaieire.app.feature.polls.presentation.PollsListScreen
 import org.sathyasaieire.app.feature.whatsapp.presentation.WhatsAppJoinScreen
@@ -38,6 +39,7 @@ fun AppNavGraph(
     authState: AuthState,
     onSignIn: (Context) -> Unit,
     onSignOut: () -> Unit,
+    onDeleteAccount: () -> Unit,
     navController: NavHostController = rememberNavController(),
 ) {
     val backStack by navController.currentBackStackEntryAsState()
@@ -188,7 +190,11 @@ fun AppNavGraph(
                 StubScreen(label = "Profile", emoji = "👤")
             }
             composable(Route.Settings.path) {
-                StubScreen(label = "Settings", emoji = "⚙️")
+                SettingsScreen(
+                    onBack = { navController.popBackStack() },
+                    onSignOut = onSignOut,
+                    onDeleteAccount = onDeleteAccount,
+                )
             }
 
             // ── Admin screens (no bottom bar) ────────────────────────────────
