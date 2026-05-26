@@ -23,6 +23,8 @@ import org.sathyasaieire.app.feature.events.presentation.AdminEventScreen
 import org.sathyasaieire.app.feature.events.presentation.EventDetailScreen
 import org.sathyasaieire.app.feature.events.presentation.EventListScreen
 import org.sathyasaieire.app.feature.home.presentation.HomeScreen
+import org.sathyasaieire.app.feature.more.presentation.MoreScreen
+import org.sathyasaieire.app.feature.whatsapp.presentation.WhatsAppJoinScreen
 import org.sathyasaieire.app.ui.components.SaiBottomBar
 import org.sathyasaieire.app.ui.components.StubScreen
 import org.sathyasaieire.app.ui.components.bottomBarRoutes
@@ -122,7 +124,10 @@ fun AppNavGraph(
                 StubScreen(label = "News", emoji = "📰", contentPadding = padding)
             }
             composable(Route.More.path) {
-                StubScreen(label = "More", emoji = "⋯", contentPadding = padding)
+                MoreScreen(
+                    onNavigate = { route -> navController.navigate(route) },
+                    contentPadding = padding,
+                )
             }
 
             // ── Detail screens (no bottom bar) ───────────────────────────────
@@ -136,6 +141,34 @@ fun AppNavGraph(
                         { navController.navigate(Route.AdminEventEdit.createRoute(it)) }
                     } else null,
                 )
+            }
+
+            // ── WhatsApp join (no bottom bar) ────────────────────────────────
+            composable(Route.WhatsApp.path) {
+                WhatsAppJoinScreen(onBack = { navController.popBackStack() })
+            }
+
+            // ── Stub screens (no bottom bar) ─────────────────────────────────
+            composable(Route.Contact.path) {
+                StubScreen(label = "Contact Admin", emoji = "✉️")
+            }
+            composable(Route.Gallery.path) {
+                StubScreen(label = "Gallery", emoji = "🖼")
+            }
+            composable(Route.Bhajans.path) {
+                StubScreen(label = "Bhajan Library", emoji = "🎵")
+            }
+            composable(Route.Timer.path) {
+                StubScreen(label = "Meditation Timer", emoji = "🧘")
+            }
+            composable(Route.Seva.path) {
+                StubScreen(label = "Seva Sign-up", emoji = "💚")
+            }
+            composable(Route.Profile.path) {
+                StubScreen(label = "Profile", emoji = "👤")
+            }
+            composable(Route.Settings.path) {
+                StubScreen(label = "Settings", emoji = "⚙️")
             }
 
             // ── Admin screens (no bottom bar) ────────────────────────────────
