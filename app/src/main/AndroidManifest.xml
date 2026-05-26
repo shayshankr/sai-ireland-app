@@ -34,7 +34,19 @@
         </activity>
 
         <!-- FCM service — added in Feature 7 -->
-        <!-- Event alarm receiver — added in Feature 3 -->
+
+        <receiver
+            android:name=".feature.alarm.EventAlarmReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".feature.alarm.BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 </manifest>

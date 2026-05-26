@@ -20,6 +20,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.DirectionsWalk
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Schedule
@@ -45,6 +46,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.sathyasaieire.app.domain.model.Event
@@ -54,10 +58,12 @@ import org.sathyasaieire.app.domain.model.EventCategory
 @Composable
 fun EventDetailScreen(
     onBack: () -> Unit,
+    onEditEvent: ((String) -> Unit)? = null,
     viewModel: EventDetailViewModel = hiltViewModel(),
 ) {
     val event by viewModel.event.collectAsState()
     val context = LocalContext.current
+    var showReminderDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -66,6 +72,13 @@ fun EventDetailScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    if (onEditEvent != null && event != null) {
+                        IconButton(onClick = { onEditEvent(event!!.id) }) {
+                            Icon(Icons.Outlined.Edit, contentDescription = "Edit event")
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -198,14 +211,23 @@ fun EventDetailScreen(
                     }
                 }
 
-                // Reminder placeholder (Feature 3)
                 OutlinedButton(
-                    onClick = { /* Feature 3 */ },
+                    onClick = { showReminderDialog = true },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Outlined.AddTask, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                     Text("Set Reminder")
+                }
+
+                if (showReminderDialog) {
+                    ReminderDialog(
+                        onDismiss = { showReminderDialog = false },
+                        onConfirm = { offset ->
+                            viewModel.scheduleReminder(offset)
+                            showReminderDialog = false
+                        },
+                    )
                 }
             }
         }

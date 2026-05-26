@@ -15,13 +15,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import org.sathyasaieire.app.domain.model.UserRole
 import org.sathyasaieire.app.feature.auth.presentation.AuthState
 import org.sathyasaieire.app.feature.auth.presentation.GdprConsentScreen
 import org.sathyasaieire.app.feature.auth.presentation.SignInScreen
+import org.sathyasaieire.app.feature.events.presentation.AdminEventScreen
 import org.sathyasaieire.app.feature.events.presentation.EventDetailScreen
 import org.sathyasaieire.app.feature.events.presentation.EventListScreen
 import org.sathyasaieire.app.feature.home.presentation.HomeScreen
 import org.sathyasaieire.app.ui.components.SaiBottomBar
+import org.sathyasaieire.app.ui.components.StubScreen
 import org.sathyasaieire.app.ui.components.bottomBarRoutes
 
 @Composable
@@ -34,6 +37,9 @@ fun AppNavGraph(
     val backStack by navController.currentBackStackEntryAsState()
     val currentRoute = backStack?.destination?.route
     val showBottomBar = currentRoute in bottomBarRoutes
+
+    val isAdmin = (authState as? AuthState.SignedIn)?.user?.role
+        ?.let { it == UserRole.ADMIN || it == UserRole.SUPER_ADMIN } ?: false
 
     val startDestination = when (authState) {
         is AuthState.Loading -> Route.SignIn.path
@@ -104,6 +110,8 @@ fun AppNavGraph(
             composable(Route.Events.path) {
                 EventListScreen(
                     onEventClick = { id -> navController.navigate(Route.EventDetail.createRoute(id)) },
+                    onCreateEvent = { navController.navigate(Route.AdminEventCreate.path) },
+                    isAdmin = isAdmin,
                     contentPadding = padding,
                 )
             }
@@ -122,7 +130,23 @@ fun AppNavGraph(
                 route = Route.EventDetail.path,
                 arguments = listOf(navArgument("eventId") { type = NavType.StringType }),
             ) {
-                EventDetailScreen(onBack = { navController.popBackStack() })
+                EventDetailScreen(
+                    onBack = { navController.popBackStack() },
+                    onEditEvent = if (isAdmin) {
+                        { navController.navigate(Route.AdminEventEdit.createRoute(it)) }
+                    } else null,
+                )
+            }
+
+            // ── Admin screens (no bottom bar) ────────────────────────────────
+            composable(Route.AdminEventCreate.path) {
+                AdminEventScreen(onBack = { navController.popBackStack() })
+            }
+            composable(
+                route = Route.AdminEventEdit.path,
+                arguments = listOf(navArgument("eventId") { type = NavType.StringType }),
+            ) {
+                AdminEventScreen(onBack = { navController.popBackStack() })
             }
         }
     }

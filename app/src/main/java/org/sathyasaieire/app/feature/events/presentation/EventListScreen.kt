@@ -17,11 +17,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.EventBusy
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -65,6 +67,8 @@ import java.time.ZoneId
 @Composable
 fun EventListScreen(
     onEventClick: (String) -> Unit,
+    onCreateEvent: (() -> Unit)? = null,
+    isAdmin: Boolean = false,
     contentPadding: PaddingValues = PaddingValues(),
     viewModel: EventViewModel = hiltViewModel(),
 ) {
@@ -87,6 +91,13 @@ fun EventListScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = {
+            if (isAdmin) {
+                FloatingActionButton(onClick = { onCreateEvent?.invoke() }) {
+                    Icon(Icons.Outlined.Add, contentDescription = "Create event")
+                }
+            }
+        },
         topBar = {
             TopAppBar(
                 title = { Text("Events") },

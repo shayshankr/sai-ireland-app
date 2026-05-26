@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.sathyasaieire.app.domain.model.Event
+import org.sathyasaieire.app.feature.alarm.ReminderOffset
+import org.sathyasaieire.app.feature.alarm.ReminderScheduler
 import org.sathyasaieire.app.feature.events.data.EventRepository
 import javax.inject.Inject
 
@@ -48,6 +50,7 @@ class EventViewModel @Inject constructor(
 class EventDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: EventRepository,
+    private val reminderScheduler: ReminderScheduler,
 ) : ViewModel() {
 
     private val eventId: String = checkNotNull(savedStateHandle["eventId"])
@@ -59,5 +62,10 @@ class EventDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _event.value = repository.getById(eventId)
         }
+    }
+
+    fun scheduleReminder(offset: ReminderOffset) {
+        val e = _event.value ?: return
+        reminderScheduler.schedule(e, offset)
     }
 }

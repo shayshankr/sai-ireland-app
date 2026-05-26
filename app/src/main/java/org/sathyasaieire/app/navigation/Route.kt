@@ -27,5 +27,9 @@ sealed class Route(val path: String) {
     data object Settings : Route("settings")
     data object Profile : Route("profile")
     data object Admin : Route("admin")
+    data object AdminEventCreate : Route("admin_event_create")
+    data object AdminEventEdit : Route("admin_event_edit/{eventId}") {
+        fun createRoute(eventId: String) = "admin_event_edit/$eventId"
+    }
     data object PrivacyPolicy : Route("privacy_policy")
 }
