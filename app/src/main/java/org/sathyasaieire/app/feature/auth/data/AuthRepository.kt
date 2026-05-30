@@ -32,7 +32,7 @@ class AuthRepository @Inject constructor(
         val credentialManager = CredentialManager.create(activityContext)
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
-            .setServerClientId(context.getString(R.string.default_web_client_id))
+            .setServerClientId(context.getString(R.string.google_web_client_id))
             .setAutoSelectEnabled(false)
             .build()
         val request = GetCredentialRequest.Builder()
@@ -73,9 +73,13 @@ class AuthRepository @Inject constructor(
 
     suspend fun updateConsent(gdprConsent: Boolean, analyticsEnabled: Boolean) {
         val uid = auth.currentUser?.uid ?: return
-        firestore.collection("users").document(uid)
-            .update(mapOf("gdprConsent" to gdprConsent, "analyticsEnabled" to analyticsEnabled))
-            .await()
+        try {
+            firestore.collection("users").document(uid)
+                .update(mapOf("gdprConsent" to gdprConsent, "analyticsEnabled" to analyticsEnabled))
+                .await()
+        } catch (e: Exception) {
+            // Firestore unavailable — consent will be re-synced on next sign-in
+        }
     }
 
     suspend fun updatePhone(phone: String) {
@@ -106,26 +110,32 @@ class AuthRepository @Inject constructor(
 
     private suspend fun upsertUser(firebaseUser: FirebaseUser): User {
         val uid = firebaseUser.uid
-        val docRef = firestore.collection("users").document(uid)
-        val existing = docRef.get().await()
-        val role = if (existing.exists()) existing.getString("role") ?: "member" else "member"
-        docRef.set(
-            mapOf(
-                "uid" to uid,
-                "name" to (firebaseUser.displayName ?: ""),
-                "email" to (firebaseUser.email ?: ""),
-                "photoUrl" to firebaseUser.photoUrl?.toString(),
-                "role" to role,
-            ),
-            SetOptions.merge(),
-        ).await()
-        return User(
+        val fallbackUser = User(
             uid = uid,
             name = firebaseUser.displayName ?: "",
             email = firebaseUser.email ?: "",
             photoUrl = firebaseUser.photoUrl?.toString(),
-            role = UserRole.fromString(role),
+            role = UserRole.MEMBER,
         )
+        return try {
+            val docRef = firestore.collection("users").document(uid)
+            val existing = docRef.get().await()
+            val role = if (existing.exists()) existing.getString("role") ?: "member" else "member"
+            docRef.set(
+                mapOf(
+                    "uid" to uid,
+                    "name" to (firebaseUser.displayName ?: ""),
+                    "email" to (firebaseUser.email ?: ""),
+                    "photoUrl" to firebaseUser.photoUrl?.toString(),
+                    "role" to role,
+                ),
+                SetOptions.merge(),
+            ).await()
+            fallbackUser.copy(role = UserRole.fromString(role))
+        } catch (e: Exception) {
+            // Firestore unavailable — sign in with basic Google profile, sync later
+            fallbackUser
+        }
     }
 }
 

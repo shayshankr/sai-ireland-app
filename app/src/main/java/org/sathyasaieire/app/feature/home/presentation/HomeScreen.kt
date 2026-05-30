@@ -197,7 +197,7 @@ private fun QuoteCard(quote: Quote) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             Text(
-                text = "✨ Daily Quote",
+                text = "🕉 Thought of the Day",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 fontWeight = FontWeight.SemiBold,
@@ -214,6 +214,13 @@ private fun QuoteCard(quote: Quote) {
                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f),
                 fontWeight = FontWeight.Medium,
             )
+            if (quote.source.isNotBlank()) {
+                Text(
+                    text = quote.source,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f),
+                )
+            }
         }
     }
 }

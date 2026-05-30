@@ -10,21 +10,23 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private data class FallbackThought(val text: String, val source: String = "Sanathana Sarathi")
+
 private val FALLBACK_QUOTES = listOf(
-    "Love all, serve all. Help ever, hurt never.",
-    "The end of education is character.",
-    "Start the day with love, fill the day with love, end the day with love — that is the way to God.",
-    "You are not one person but three: the one you think you are, the one others think you are, and the one you really are.",
-    "Life is a song — sing it. Life is a game — play it. Life is a challenge — meet it. Life is a dream — realise it.",
-    "There is only one religion, the religion of love.",
-    "The greatest gift you can give is your love. It costs nothing and means everything.",
-    "Be like a lotus. Let the beauty of your heart speak.",
-    "Do not be led by others; be led by your own conscience.",
-    "Service to man is service to God.",
-    "God is not an object to be worshipped outside. God is the love that dwells within you.",
-    "Whatever you do, offer it to God. That is the highest form of prayer.",
-    "Forbearance is the greatest virtue. Compassion is the greatest strength.",
-    "Joy and peace are already within you. Turn inward and find them.",
+    FallbackThought("Love all, serve all. Help ever, hurt never."),
+    FallbackThought("The end of education is character."),
+    FallbackThought("Start the day with love, fill the day with love, end the day with love — that is the way to God."),
+    FallbackThought("You are not one person but three: the one you think you are, the one others think you are, and the one you really are."),
+    FallbackThought("Life is a song — sing it. Life is a game — play it. Life is a challenge — meet it. Life is a dream — realise it."),
+    FallbackThought("There is only one religion, the religion of love."),
+    FallbackThought("The greatest gift you can give is your love. It costs nothing and means everything."),
+    FallbackThought("Be like a lotus. Let the beauty of your heart speak."),
+    FallbackThought("Do not be led by others; be led by your own conscience."),
+    FallbackThought("Service to man is service to God."),
+    FallbackThought("God is not an object to be worshipped outside. God is the love that dwells within you."),
+    FallbackThought("Whatever you do, offer it to God. That is the highest form of prayer."),
+    FallbackThought("Forbearance is the greatest virtue. Compassion is the greatest strength."),
+    FallbackThought("Joy and peace are already within you. Turn inward and find them."),
 )
 
 @Singleton
@@ -39,16 +41,43 @@ class HomeRepository @Inject constructor(
             val doc = firestore.collection("quotes").document(today).get().await()
             if (doc.exists()) {
                 Quote(
-                    text = doc.getString("text") ?: fallbackQuote(today),
+                    text = doc.getString("text") ?: fallbackThought(today).text,
                     attribution = doc.getString("attribution") ?: "Sri Sathya Sai Baba",
+                    source = doc.getString("source") ?: "",
                     date = today,
                 )
             } else {
-                Quote(text = fallbackQuote(today), date = today)
+                fallbackThought(today).let { Quote(text = it.text, source = it.source, date = today) }
             }
         } catch (e: Exception) {
-            Quote(text = fallbackQuote(today), date = today)
+            fallbackThought(today).let { Quote(text = it.text, source = it.source, date = today) }
         }
+    }
+
+    suspend fun getThoughtForDate(date: String): Quote? = try {
+        val doc = firestore.collection("quotes").document(date).get().await()
+        if (doc.exists()) Quote(
+            text = doc.getString("text") ?: "",
+            attribution = doc.getString("attribution") ?: "Sri Sathya Sai Baba",
+            source = doc.getString("source") ?: "",
+            date = date,
+        ) else null
+    } catch (e: Exception) {
+        null
+    }
+
+    suspend fun saveThought(date: String, text: String, attribution: String, source: String): Result<Unit> = try {
+        firestore.collection("quotes").document(date).set(
+            mapOf(
+                "text" to text,
+                "attribution" to attribution,
+                "source" to source,
+                "updatedAt" to System.currentTimeMillis(),
+            )
+        ).await()
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 
     suspend fun getActiveAnnouncements(): List<Announcement> {
@@ -72,7 +101,7 @@ class HomeRepository @Inject constructor(
         }
     }
 
-    private fun fallbackQuote(dateStr: String): String {
+    private fun fallbackThought(dateStr: String): FallbackThought {
         val day = try { LocalDate.parse(dateStr, dateFormatter).dayOfYear } catch (e: Exception) { 0 }
         return FALLBACK_QUOTES[day % FALLBACK_QUOTES.size]
     }

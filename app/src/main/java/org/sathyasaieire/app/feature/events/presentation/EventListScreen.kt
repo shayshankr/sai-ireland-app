@@ -53,7 +53,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.sathyasaieire.app.domain.model.Event
@@ -146,6 +145,7 @@ fun EventListScreen(
                     // Calendar (upcoming tab only)
                     if (selectedTab == 0) {
                         item {
+                            Column {
                             AnimatedVisibility(visible = showCalendar) {
                                 val eventDates = upcoming.map { event ->
                                     Instant.ofEpochMilli(event.dateTimeMs)
@@ -159,6 +159,7 @@ fun EventListScreen(
                                     modifier = Modifier.padding(bottom = 8.dp),
                                 )
                             }
+                            } // Column
                         }
                         if (selectedDate != null) {
                             item {

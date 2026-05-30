@@ -37,5 +37,6 @@ sealed class Route(val path: String) {
     data object AdminAnnouncementEdit : Route("admin_announcement_edit/{announcementId}") {
         fun createRoute(announcementId: String) = "admin_announcement_edit/$announcementId"
     }
+    data object AdminThoughtOfDay : Route("admin_thought_of_day")
     data object PrivacyPolicy : Route("privacy_policy")
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Announcement
+import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.ContactMail
 import androidx.compose.material.icons.outlined.LibraryMusic
@@ -61,6 +62,7 @@ fun MoreScreen(
         add(MoreItem(Icons.Outlined.Settings, "⚙️", "Settings", "App preferences and notifications", "settings"))
         if (isAdmin) {
             add(MoreItem(Icons.Outlined.Announcement, "📢", "Manage Announcements", "Create, edit, or hide announcements", "admin_announcements"))
+            add(MoreItem(Icons.Outlined.AutoAwesome, "🕉", "Thought of the Day", "Set the daily thought from Sanathana Sarathi", "admin_thought_of_day"))
         }
     }
 

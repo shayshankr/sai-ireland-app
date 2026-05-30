@@ -4,6 +4,8 @@
     <string name="privacy_policy_url">https://shayshankr.github.io/sai-ireland-app/privacy</string>
     <string name="donation_url">https://sathyasaieire.org</string>
     <string name="whatsapp_placeholder">Link available after join request is approved.</string>
+    <!-- Replace with Web Client ID from Firebase Console → Authentication → Google → Web SDK Configuration -->
+    <string name="google_web_client_id">710020672701-p0ikr827e09uh8vt7it3hbfthu438mbo.apps.googleusercontent.com</string>
     <string name="sign_in_tagline">Love All, Serve All</string>
     <string name="sign_in_body">Sign in to access events, polls, and community updates for the Sathya Sai Organisation Ireland.</string>
     <string name="sign_in_button">Continue with Google</string>

@@ -24,6 +24,7 @@ import org.sathyasaieire.app.feature.events.presentation.EventDetailScreen
 import org.sathyasaieire.app.feature.events.presentation.EventListScreen
 import org.sathyasaieire.app.feature.announcements.presentation.AdminAnnouncementFormScreen
 import org.sathyasaieire.app.feature.announcements.presentation.AdminAnnouncementsScreen
+import org.sathyasaieire.app.feature.thoughtofday.presentation.AdminThoughtOfDayScreen
 import org.sathyasaieire.app.feature.bhajans.presentation.BhajanDetailScreen
 import org.sathyasaieire.app.feature.bhajans.presentation.BhajanListScreen
 import org.sathyasaieire.app.feature.contact.presentation.ContactScreen
@@ -233,6 +234,11 @@ fun AppNavGraph(
                 arguments = listOf(navArgument("announcementId") { type = NavType.StringType }),
             ) {
                 AdminAnnouncementFormScreen(onBack = { navController.popBackStack() })
+            }
+
+            // ── Thought of the Day admin (no bottom bar) ────────────────────
+            composable(Route.AdminThoughtOfDay.path) {
+                AdminThoughtOfDayScreen(onBack = { navController.popBackStack() })
             }
 
             // ── Admin screens (no bottom bar) ────────────────────────────────

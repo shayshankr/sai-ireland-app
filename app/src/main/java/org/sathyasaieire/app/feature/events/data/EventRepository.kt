@@ -74,21 +74,25 @@ class EventRepository @Inject constructor(
 
 private fun toDomainMapper(entity: org.sathyasaieire.app.data.local.entity.EventEntity) = entity.toDomain()
 
-private fun com.google.firebase.firestore.DocumentSnapshot.toEvent(): Event? = try {
-    Event(
-        id = id,
-        title = getString("title") ?: return null,
-        description = getString("description") ?: "",
-        dateTimeMs = getLong("dateTimeMs") ?: return null,
-        timezone = getString("timezone") ?: "Europe/Dublin",
-        location = getString("location") ?: "",
-        mapsLink = getString("mapsLink"),
-        coverImageUrl = getString("coverImageUrl"),
-        category = EventCategory.fromString(getString("category") ?: ""),
-        recurrence = RecurrenceType.fromString(getString("recurrence") ?: ""),
-        createdBy = getString("createdBy") ?: "",
-        createdAt = getLong("createdAt") ?: 0L,
-    )
-} catch (e: Exception) {
-    null
+private fun com.google.firebase.firestore.DocumentSnapshot.toEvent(): Event? {
+    val title = getString("title") ?: return null
+    val dateTimeMs = getLong("dateTimeMs") ?: return null
+    return try {
+        Event(
+            id = id,
+            title = title,
+            description = getString("description") ?: "",
+            dateTimeMs = dateTimeMs,
+            timezone = getString("timezone") ?: "Europe/Dublin",
+            location = getString("location") ?: "",
+            mapsLink = getString("mapsLink"),
+            coverImageUrl = getString("coverImageUrl"),
+            category = EventCategory.fromString(getString("category") ?: ""),
+            recurrence = RecurrenceType.fromString(getString("recurrence") ?: ""),
+            createdBy = getString("createdBy") ?: "",
+            createdAt = getLong("createdAt") ?: 0L,
+        )
+    } catch (e: Exception) {
+        null
+    }
 }

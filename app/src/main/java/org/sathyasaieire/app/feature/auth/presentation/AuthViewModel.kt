@@ -67,12 +67,25 @@ class AuthViewModel @Inject constructor(
 
     fun grantConsent(analyticsEnabled: Boolean) {
         viewModelScope.launch {
-            authRepository.updateConsent(gdprConsent = true, analyticsEnabled = analyticsEnabled)
-            // Enable analytics/crashlytics if consented
-            FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(analyticsEnabled)
-            FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = analyticsEnabled
-            val user = authRepository.getCurrentUser()
-            _state.value = if (user != null) AuthState.SignedIn(user) else AuthState.SignedOut
+            try {
+                authRepository.updateConsent(gdprConsent = true, analyticsEnabled = analyticsEnabled)
+                FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(analyticsEnabled)
+                FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = analyticsEnabled
+                val user = authRepository.getCurrentUser()
+                // Fall back to the already-loaded signed-in user if Firestore is unavailable
+                val currentState = _state.value
+                _state.value = when {
+                    user != null -> AuthState.SignedIn(user.copy(gdprConsent = true))
+                    currentState is AuthState.NeedsConsent -> AuthState.SignedIn(currentState.user.copy(gdprConsent = true))
+                    else -> AuthState.SignedOut
+                }
+            } catch (e: Exception) {
+                // Still navigate forward even if Firestore sync fails
+                val currentState = _state.value
+                if (currentState is AuthState.NeedsConsent) {
+                    _state.value = AuthState.SignedIn(currentState.user.copy(gdprConsent = true))
+                }
+            }
         }
     }
 
