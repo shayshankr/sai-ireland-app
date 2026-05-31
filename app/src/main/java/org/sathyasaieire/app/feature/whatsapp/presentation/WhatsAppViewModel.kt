@@ -48,7 +48,7 @@ class WhatsAppViewModel @Inject constructor(
                     _uiState.value = if (request == null) WhatsAppUiState.Form
                     else WhatsAppUiState.Status(request)
                 },
-                onFailure = { _uiState.value = WhatsAppUiState.Error(it.message ?: "Failed to load") },
+                onFailure = { _uiState.value = WhatsAppUiState.Form },
             )
         }
     }
