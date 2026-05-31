@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Sathya Sai Organisation Ireland</string>
-    <string name="admin_email">shayshankrathore05@gmail.com</string>
+    <string name="admin_email">shayshankr@gmail.com</string>
+    <string name="admin_phone">+353899751145</string>
+    <string name="admin_phone_display">+353 89 975 1145</string>
+    <string name="whatsapp_group_link">https://chat.whatsapp.com/Jfe0BSrLbLFDgV21azAQTY?s=sh&amp;p=a&amp;ilr=0</string>
     <string name="privacy_policy_url">https://shayshankr.github.io/sai-ireland-app/privacy</string>
     <string name="donation_url">https://sathyasaieire.org</string>
     <string name="whatsapp_placeholder">Link available after join request is approved.</string>

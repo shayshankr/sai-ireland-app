@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import org.sathyasaieire.app.R
 import org.sathyasaieire.app.domain.model.JoinRequest
 import org.sathyasaieire.app.domain.model.JoinRequestStatus
 
@@ -102,7 +103,8 @@ fun WhatsAppJoinScreen(
             }
 
             is WhatsAppUiState.Status -> {
-                RequestStatusView(request = state.request, contentPadding = padding)
+                val groupLink = androidx.compose.ui.res.stringResource(R.string.whatsapp_group_link)
+                RequestStatusView(request = state.request, defaultGroupLink = groupLink, contentPadding = padding)
             }
 
             is WhatsAppUiState.Error -> {
@@ -234,6 +236,7 @@ private fun JoinRequestForm(
 @Composable
 private fun RequestStatusView(
     request: JoinRequest,
+    defaultGroupLink: String,
     contentPadding: PaddingValues,
 ) {
     val context = LocalContext.current
@@ -282,11 +285,12 @@ private fun RequestStatusView(
             }
         }
 
-        if (request.status == JoinRequestStatus.APPROVED && request.whatsappLink != null) {
+        if (request.status == JoinRequestStatus.APPROVED) {
+            val link = request.whatsappLink ?: defaultGroupLink
             Button(
                 onClick = {
                     runCatching {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(request.whatsappLink)))
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),

@@ -55,6 +55,8 @@ fun ContactScreen(
     val form by viewModel.form.collectAsState()
     val context = LocalContext.current
     val adminEmail = stringResource(R.string.admin_email)
+    val adminPhone = stringResource(R.string.admin_phone)
+    val adminPhoneDisplay = stringResource(R.string.admin_phone_display)
 
     Scaffold(
         topBar = {
@@ -84,6 +86,7 @@ fun ContactScreen(
                     subject = state.subject,
                     message = state.message,
                     adminEmail = adminEmail,
+                    adminPhoneDisplay = adminPhoneDisplay,
                     onSendEmail = {
                         val intent = Intent(Intent.ACTION_SENDTO).apply {
                             data = Uri.parse("mailto:")
@@ -91,6 +94,10 @@ fun ContactScreen(
                             putExtra(Intent.EXTRA_SUBJECT, "[Sai Ireland App] ${state.subject}")
                             putExtra(Intent.EXTRA_TEXT, state.message)
                         }
+                        runCatching { context.startActivity(intent) }
+                    },
+                    onCall = {
+                        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$adminPhone"))
                         runCatching { context.startActivity(intent) }
                     },
                     onSendAnother = viewModel::reset,
@@ -219,7 +226,9 @@ private fun SuccessView(
     subject: String,
     message: String,
     adminEmail: String,
+    adminPhoneDisplay: String,
     onSendEmail: () -> Unit,
+    onCall: () -> Unit,
     onSendAnother: () -> Unit,
     contentPadding: androidx.compose.foundation.layout.PaddingValues,
 ) {
@@ -256,13 +265,17 @@ private fun SuccessView(
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "You can also send a direct email to $adminEmail if you need a faster response.",
+            text = "For a faster response you can also reach us directly:",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         OutlinedButton(onClick = onSendEmail, modifier = Modifier.fillMaxWidth()) {
-            Text("Open Email App")
+            Text("📧  Email  $adminEmail")
+        }
+
+        OutlinedButton(onClick = onCall, modifier = Modifier.fillMaxWidth()) {
+            Text("📞  Call  $adminPhoneDisplay")
         }
 
         Button(onClick = onSendAnother, modifier = Modifier.fillMaxWidth()) {
