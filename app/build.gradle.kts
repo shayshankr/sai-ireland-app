@@ -1,5 +1,9 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+fun gitCommitCount(): Int =
+    Runtime.getRuntime().exec(arrayOf("git", "rev-list", "--count", "HEAD"))
+        .inputStream.bufferedReader().readText().trim().toIntOrNull() ?: 1
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -21,8 +25,8 @@ android {
         applicationId = "com.shayshank.saiireland"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = gitCommitCount()
+        versionName = "1.${gitCommitCount()}"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
