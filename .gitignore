@@ -22,3 +22,4 @@ keystore.properties
 # Environment
 .env
 *.env
+play-service-account.json

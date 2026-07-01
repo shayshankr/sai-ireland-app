@@ -1,4 +1,11 @@
+import java.util.Properties
+
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) load(f.inputStream())
+}
 
 fun gitCommitCount(): Int =
     Runtime.getRuntime().exec(arrayOf("git", "rev-list", "--count", "HEAD"))
@@ -11,6 +18,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.play.publisher)
 }
 
 android {
@@ -25,17 +33,17 @@ android {
         applicationId = "com.shayshank.saiireland"
         minSdk = 24
         targetSdk = 36
-        versionCode = gitCommitCount()
-        versionName = "1.${gitCommitCount()}"
+        versionCode = 20
+        versionName = "1.20"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file(System.getenv("KEYSTORE_PATH") ?: "../sai-ireland-release.jks")
-            storePassword = System.getenv("KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS") ?: "sai-ireland"
-            keyPassword = System.getenv("KEY_PASSWORD")
+            storeFile = rootProject.file("sai-ireland-release-new.jks")
+            storePassword = localProps.getProperty("STORE_PASSWORD", "saiireland2026")
+            keyAlias = localProps.getProperty("KEY_ALIAS", "sai-ireland")
+            keyPassword = localProps.getProperty("KEY_PASSWORD", "saiireland2026")
         }
     }
 
@@ -66,6 +74,12 @@ kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_11)
     }
+}
+
+play {
+    serviceAccountCredentials.set(rootProject.file("play-service-account.json"))
+    track.set("alpha")
+    defaultToAppBundles.set(true)
 }
 
 dependencies {

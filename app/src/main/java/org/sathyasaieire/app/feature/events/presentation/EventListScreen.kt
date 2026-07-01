@@ -91,8 +91,11 @@ fun EventListScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            if (isAdmin) {
-                FloatingActionButton(onClick = { onCreateEvent?.invoke() }) {
+            if (onCreateEvent != null) {
+                FloatingActionButton(
+                    onClick = { onCreateEvent.invoke() },
+                    modifier = Modifier.padding(bottom = contentPadding.calculateBottomPadding()),
+                ) {
                     Icon(Icons.Outlined.Add, contentDescription = "Create event")
                 }
             }
@@ -115,9 +118,9 @@ fun EventListScreen(
             )
         },
     ) { innerPadding ->
+        val listBottomPadding = innerPadding.calculateBottomPadding() + contentPadding.calculateBottomPadding()
         val padding = PaddingValues(
             top = innerPadding.calculateTopPadding() + contentPadding.calculateTopPadding(),
-            bottom = innerPadding.calculateBottomPadding() + contentPadding.calculateBottomPadding(),
             start = contentPadding.calculateLeftPadding(androidx.compose.ui.unit.LayoutDirection.Ltr),
             end = contentPadding.calculateRightPadding(androidx.compose.ui.unit.LayoutDirection.Ltr),
         )
@@ -139,7 +142,12 @@ fun EventListScreen(
                 val events = if (selectedTab == 0) upcoming else past
 
                 LazyColumn(
-                    contentPadding = PaddingValues(16.dp),
+                    contentPadding = PaddingValues(
+                        start = 16.dp,
+                        top = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp + listBottomPadding,
+                    ),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     // Calendar (upcoming tab only)

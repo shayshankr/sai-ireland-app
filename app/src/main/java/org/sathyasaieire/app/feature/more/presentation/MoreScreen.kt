@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.ContactMail
 import androidx.compose.material.icons.outlined.LibraryMusic
+import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
@@ -63,6 +64,7 @@ fun MoreScreen(
         if (isAdmin) {
             add(MoreItem(Icons.Outlined.Announcement, "📢", "Manage Announcements", "Create, edit, or hide announcements", "admin_announcements"))
             add(MoreItem(Icons.Outlined.AutoAwesome, "🕉", "Thought of the Day", "Set the daily thought from Sanathana Sarathi", "admin_thought_of_day"))
+            add(MoreItem(Icons.Outlined.Mail, "📥", "Messages", "View messages sent to admin", "admin_inbox"))
         }
     }
 

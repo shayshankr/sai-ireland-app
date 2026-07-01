@@ -27,6 +27,7 @@ import org.sathyasaieire.app.feature.announcements.presentation.AdminAnnouncemen
 import org.sathyasaieire.app.feature.thoughtofday.presentation.AdminThoughtOfDayScreen
 import org.sathyasaieire.app.feature.bhajans.presentation.BhajanDetailScreen
 import org.sathyasaieire.app.feature.bhajans.presentation.BhajanListScreen
+import org.sathyasaieire.app.feature.contact.presentation.AdminInboxScreen
 import org.sathyasaieire.app.feature.contact.presentation.ContactScreen
 import org.sathyasaieire.app.feature.home.presentation.HomeScreen
 import org.sathyasaieire.app.feature.more.presentation.MoreScreen
@@ -239,6 +240,11 @@ fun AppNavGraph(
             // ── Thought of the Day admin (no bottom bar) ────────────────────
             composable(Route.AdminThoughtOfDay.path) {
                 AdminThoughtOfDayScreen(onBack = { navController.popBackStack() })
+            }
+
+            // ── Message inbox admin (no bottom bar) ─────────────────────────
+            composable(Route.AdminInbox.path) {
+                AdminInboxScreen(onBack = { navController.popBackStack() })
             }
 
             // ── Admin screens (no bottom bar) ────────────────────────────────

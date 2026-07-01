@@ -68,16 +68,19 @@ fun PollsListScreen(
             )
         },
         floatingActionButton = {
-            if (isAdmin) {
-                FloatingActionButton(onClick = { onCreatePoll?.invoke() }) {
+            if (onCreatePoll != null) {
+                FloatingActionButton(
+                    onClick = { onCreatePoll.invoke() },
+                    modifier = Modifier.padding(bottom = contentPadding.calculateBottomPadding()),
+                ) {
                     Icon(Icons.Outlined.Add, contentDescription = "Create poll")
                 }
             }
         },
     ) { innerPadding ->
+        val listBottomPadding = innerPadding.calculateBottomPadding() + contentPadding.calculateBottomPadding()
         val padding = PaddingValues(
             top = innerPadding.calculateTopPadding() + contentPadding.calculateTopPadding(),
-            bottom = innerPadding.calculateBottomPadding() + contentPadding.calculateBottomPadding(),
             start = contentPadding.calculateLeftPadding(androidx.compose.ui.unit.LayoutDirection.Ltr),
             end = contentPadding.calculateRightPadding(androidx.compose.ui.unit.LayoutDirection.Ltr),
         )
@@ -109,7 +112,12 @@ fun PollsListScreen(
             val displayed = if (selectedTab == 0) openPolls else closedPolls
 
             LazyColumn(
-                contentPadding = PaddingValues(16.dp),
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    top = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp + listBottomPadding,
+                ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxSize(),
             ) {

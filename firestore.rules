@@ -37,13 +37,17 @@ service cloud.firestore {
     // ── Events ─────────────────────────────────────────────────────────────
     match /events/{eventId} {
       allow read: if isSignedIn();
-      allow create, update, delete: if isAdmin();
+      // Any member can create their own event; only admins can edit/delete
+      allow create: if isSignedIn() && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if isAdmin();
     }
 
     // ── Polls ──────────────────────────────────────────────────────────────
     match /polls/{pollId} {
       allow read: if isSignedIn();
-      allow create, update, delete: if isAdmin();
+      // Any member can create a poll; only admins can close or delete
+      allow create: if isSignedIn() && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if isAdmin();
 
       match /votes/{uid} {
         allow read: if isSignedIn();
@@ -68,7 +72,7 @@ service cloud.firestore {
       allow create: if isSignedIn()
         && request.resource.data.userId == request.auth.uid;
       allow read: if isAdmin();
-      allow update, delete: if false;
+      allow update, delete: if isAdmin();
     }
 
     // ── Announcements ──────────────────────────────────────────────────────
