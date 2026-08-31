@@ -28,9 +28,12 @@ service cloud.firestore {
       // Users can create their own doc; cannot self-promote role
       allow create: if isOwner(uid)
         && !('role' in request.resource.data && request.resource.data.role != 'member');
-      allow update: if (isOwner(uid)
-          && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']))
-        || isAdmin();
+      // Owners and admins may edit a profile, but only a super_admin may
+      // change the `role` field itself — otherwise any admin could
+      // promote themselves (or anyone else) to super_admin.
+      allow update: if isSuperAdmin()
+        || ((isOwner(uid) || isAdmin())
+            && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']));
       allow delete: if isSuperAdmin();
     }
 
@@ -51,8 +54,12 @@ service cloud.firestore {
 
       match /votes/{uid} {
         allow read: if isSignedIn();
-        // One vote per user — enforced by document path == uid + existence check
+        // One vote per user — enforced by document path == uid + existence check.
+        // Also require the parent poll to still be open, otherwise anyone could
+        // vote via a direct Firestore write after an admin closes the poll
+        // (the "no more votes will be accepted" guarantee shown in the app).
         allow create: if isOwner(uid)
+          && get(/databases/$(database)/documents/polls/$(pollId)).data.isOpen == true
           && !exists(/databases/$(database)/documents/polls/$(pollId)/votes/$(request.auth.uid));
         allow update, delete: if false;
       }
