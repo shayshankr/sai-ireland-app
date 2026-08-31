@@ -1,0 +1,30 @@
+{
+  "_comment": "CI-only placeholder. Not a real Firebase project. Used by .github/workflows/ci.yml so unit tests and debug assembly can run when the GOOGLE_SERVICES_JSON secret isn't set. Never use this for a real build or commit a real config file here.",
+  "project_info": {
+    "project_number": "000000000000",
+    "project_id": "sai-ireland-ci-placeholder",
+    "storage_bucket": "sai-ireland-ci-placeholder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "android_client_info": {
+          "package_name": "com.shayshank.saiireland"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyPlaceholderPlaceholderPlaceholderPlaceho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
