@@ -39,11 +39,16 @@ android {
     }
 
     signingConfigs {
+        // Credentials come from the environment first (this is how CI supplies them —
+        // see .github/workflows/ci.yml's `release` job), falling back to local.properties
+        // for local release builds. No hardcoded defaults: a release build should fail
+        // loudly if it isn't configured, rather than silently sign with a shared password.
         create("release") {
-            storeFile = rootProject.file("sai-ireland-release-new.jks")
-            storePassword = localProps.getProperty("STORE_PASSWORD", "saiireland2026")
-            keyAlias = localProps.getProperty("KEY_ALIAS", "sai-ireland")
-            keyPassword = localProps.getProperty("KEY_PASSWORD", "saiireland2026")
+            val keystorePath = System.getenv("KEYSTORE_PATH") ?: localProps.getProperty("STORE_FILE")
+            if (keystorePath != null) storeFile = file(keystorePath)
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: localProps.getProperty("STORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS") ?: localProps.getProperty("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD") ?: localProps.getProperty("KEY_PASSWORD")
         }
     }
 
